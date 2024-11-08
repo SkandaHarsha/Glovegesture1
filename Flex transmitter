@@ -1,0 +1,56 @@
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+int index = A0;
+int middle = A1;
+int ring = A2;
+int thumb = A3;
+
+int data1 = 0;
+int data2 = 0;
+int data3 = 0;
+int data4 = 0;
+int data5 = 0;
+
+RF24 radio(9, 8); // CE, CSN
+
+const byte address[6] = "00001";
+
+byte data[4];
+
+void setup() {
+  
+  Serial.begin(115200);
+  radio.begin();
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.stopListening();
+}
+
+void loop() {
+  
+  data[0] = analogRead(index);
+  Serial.print("finger1 :");
+  Serial.println(data[0]);
+  delay(100);
+
+  data[1] = analogRead(middle);
+  Serial.print("finger2 :");
+  Serial.println(data[1]);
+  delay(100);
+
+  data[2] = analogRead(ring);
+  Serial.print("finger3 :");
+  Serial.println(data[2]);
+  delay(100);
+
+  data[3] = analogRead(thumb);
+  Serial.print("finger4 :");
+  Serial.println(data[3]);
+  delay(100);
+
+  radio.write(&data, sizeof(data));
+  delay(50);
+  
+}
